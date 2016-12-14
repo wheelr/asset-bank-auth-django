@@ -1,0 +1,83 @@
+# -*- shell-script -*-
+# Simple wrapper to create and activate a new virtualenv
+#
+# Usage:
+#   . ./activate [--clean]
+
+# Name of the project, in a form suitable for inclusion in filenames
+PROJECT=asset-bank-auth-django
+
+PYTHON_VERSION=2.7
+
+# Put the env dir in ~/env for development
+ENV_DIR="$HOME/env/$PROJECT"
+
+CLEAN=0
+# Parse command line args - override values of CLEAN and ENV_DIR that were
+# set above if -c/--clean or --env-dir command line args are present
+while [ "$#" -gt 0 ]; do
+    if [ "$1" = "-c" -o "$1" = "--clean" ]; then
+        CLEAN=1
+    fi
+    if [ "$1" = "-e" -o "$1" = "--env-dir" ]; then
+        shift
+        ENV_DIR="$1"
+    fi
+    shift
+done
+
+PYTHON=python${PYTHON_VERSION}
+PIP=pip
+if [ "`uname`" = "Darwin" ]; then
+    # Don't use binary wheels on OS X because this results in
+    # compiled-for-UCS2 binaries being installed that are incompatible with
+    # our compiled-for-UCS4 python
+    PIP_INSTALL_OPTIONS="--no-binary :all:"
+else
+    PIP_INSTALL_OPTIONS=""
+fi
+
+# Use virtualenv if present, fall back to virtualenv-2.7 if not.
+VIRTUALENV=virtualenv
+hash "${VIRTUALENV}" 2>&- || VIRTUALENV=virtualenv-${PYTHON_VERSION}
+
+# Set PIP_DOWNLOAD_CACHE if it isn't already set. If it's already set then
+# it's more efficient to re-use the existing cache than to have a separate
+# one for this app.
+# if [ "${PIP_DOWNLOAD_CACHE}" == "" ]; then
+#     export PIP_DOWNLOAD_CACHE=~/env/cache
+# fi
+
+# Check that we're being run with `source` or `.`.
+if [ `basename "${0#-}"` == "activate" ] ; then
+    echo "Usage: '. activate'"
+    exit
+fi
+
+# If `--clean` is supplied, then wipe any existing directories.
+if [ "$CLEAN" -eq 1 ] ; then
+    rm -rf "${ENV_DIR}"
+fi
+
+if [ ! -d "${ENV_DIR}" ] ; then
+	# If the virtualenv doesn't yet exist, then create it.
+    mkdir -p `dirname "${ENV_DIR}"`
+    "${VIRTUALENV}" --no-site-packages --distribute --python=${PYTHON} "${ENV_DIR}"
+    . "${ENV_DIR}"/bin/activate
+    ${PIP} install ${PIP_INSTALL_OPTIONS} -r requirements-pip.txt
+    ${PIP} install ${PIP_INSTALL_OPTIONS} -r requirements.txt
+    if [ -e local-requirements.txt ]; then
+        ${PIP} install ${PIP_INSTALL_OPTIONS} -r local-requirements.txt
+    fi
+else
+	# Activate the virtualenv.
+	. "${ENV_DIR}"/bin/activate
+fi
+
+
+# Optionally do machine-specific stuff
+# e.g. put modules that you're working on on the PYTHONPATH
+if [ -f ./local-activate ]; then
+    . ./local-activate
+fi
+

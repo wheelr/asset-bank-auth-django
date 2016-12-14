@@ -1,0 +1,2 @@
+# The required version of pip itself
+pip==9.0.1

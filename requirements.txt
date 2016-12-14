@@ -1,0 +1,5 @@
+Django==1.9.7
+pycrypto==2.6.1
+mock==2.0.0
+Fabric==1.10.2
+
