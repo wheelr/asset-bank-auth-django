@@ -9,7 +9,7 @@ from django.utils.decorators import available_attrs
 from assetbankauth.utils import authenticate_token_in_request, assetbank_login_redirect, authenticated_user_in_session
 
 
-def is_assetbank_authenticated_user():
+def ensure_assetbank_authenticated_user_in_session():
     def decorator(view_func):
         @wraps(view_func, assigned=available_attrs(view_func))
         def _wrapped_view(request, *args, **kwargs):

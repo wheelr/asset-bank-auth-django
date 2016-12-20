@@ -5,11 +5,11 @@ from django.test.testcases import TestCase
 from django.test.utils import override_settings
 from mock.mock import patch
 
-from assetbankauth.decorators import is_assetbank_authenticated_user
+from assetbankauth.decorators import ensure_assetbank_authenticated_user_in_session
 from assetbankauth.tests.utils import FakeRequest
 
 
-@is_assetbank_authenticated_user()
+@ensure_assetbank_authenticated_user_in_session()
 def test_view(request):
     return "view"
 

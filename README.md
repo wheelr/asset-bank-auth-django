@@ -18,7 +18,7 @@ The module has one decorator which when added to a view will ensure the user has
 If they have not been authenticated they will be redirected to the associated Asset Bank for authentication 
 
 ```
-@is_assetbank_authenticated_user()
+@ensure_assetbank_authenticated_user_in_session()
 def my_view(request):
     ...
 ```
