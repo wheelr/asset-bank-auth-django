@@ -27,7 +27,7 @@ The authentication is governed by following four settings in your Django setting
 
 ```
 ASSETBANK_AUTH_ENABLED = True
-ASSETBANK_URL - 'http://localhost:8080/asset-bank'
+ASSETBANK_URL = 'http://localhost:8080/asset-bank'
 ASSETBANK_AUTH_TOKEN_KEY = ''
 ASSETBANK_LOG_OUT_AFTER_AUTH = 'false'
 ```
