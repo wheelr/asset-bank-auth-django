@@ -44,7 +44,11 @@ The URL of the authenticating Asset Bank e.g. 'http://my-assetbank.com/asset-ban
 
 __ASSETBANK_AUTH_TOKEN_KEY__
 
-This should match the 'remote-app-token-key' setting in the authenticating Asset Bank
+This should match the 'remote-app-token-key' setting in the authenticating Asset Bank.
+I generated a token key with the following command:
+```
+echo "example" | openssl aes-256-cbc -e -a -K 7573746f726530313233343536373839 -iv 7573746f726530313233343536373839
+```
 
 __ASSETBANK_LOG_OUT_AFTER_AUTH = True/False__
 
